@@ -1,0 +1,16 @@
+version: 2
+
+jobs:
+  build:
+    docker:
+      - image: circleci/node:10.16
+
+    environment:
+      - NODE_ENV: test
+      - LOADED: yep
+
+    steps:
+      - checkout
+      - run: npm install
+      - run: npm run lint
+      - run: npm run test
