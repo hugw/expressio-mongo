@@ -1,5 +1,7 @@
 # Expressio Mongo
 
+[![CircleCI](https://circleci.com/gh/hugw/expressio-mongo/tree/master.svg?style=svg&circle-token=40c4892fdf614a05b02f961a74ec15dd69443b4a)](https://circleci.com/gh/hugw/expressio-mongo/tree/master)
+
 ## Install
 
 ```

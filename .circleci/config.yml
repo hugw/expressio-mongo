@@ -4,10 +4,10 @@ jobs:
   build:
     docker:
       - image: circleci/node:10.16
+      - image: circleci/mongo:latest
 
     environment:
       - NODE_ENV: test
-      - LOADED: yep
 
     steps:
       - checkout
