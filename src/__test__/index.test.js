@@ -28,7 +28,7 @@ describe('Expressio Mongo', () => {
     const server = { root, events: { on }, ...config() }
     mongo(server)
 
-    expect(Object.keys(server.mongo)).toEqual(['connect', 'disconnect', 'drop', 'seed', 'run', 'models'])
+    expect(Object.keys(server.mongo)).toEqual(['connect', 'disconnect', 'truncate', 'seed', 'run', 'models'])
     expect(server.mongoose).toBeTruthy()
     expect(on).toHaveBeenCalledTimes(1)
   })

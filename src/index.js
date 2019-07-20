@@ -7,7 +7,7 @@
  * @license MIT
  */
 
-import Joi from 'joi'
+import Joi from '@hapi/joi'
 import ndtk from 'ndtk'
 import { sanitize } from 'expressio'
 import merge from 'lodash/merge'
@@ -39,19 +39,8 @@ function loadModels(dir, conn) {
  * mongoose schemas
  */
 const schemaPlugin = options => (schema) => {
-  const { filter } = schema.options
-
   const toOpts = {
     virtuals: true,
-    transform: (doc, ret) => {
-      delete ret._id // eslint-disable-line
-
-      if (Array.isArray(filter)) {
-        filter.forEach((key) => {
-          delete ret[key] // eslint-disable-line
-        })
-      }
-    },
   }
 
   Object.keys(options).map(op => schema.set(op, options[op]))
@@ -142,14 +131,14 @@ export default (server) => {
     },
 
     /**
-     * Drop collections
+     * Truncate collections
      */
-    drop: async () => {
-      server.logger.info('MongoDB: Dropping collections...')
+    truncate: async () => {
+      server.logger.info('MongoDB: Truncating collections...')
       const promises = Object.values(mongoose.connection.collections).map(collection => collection.deleteMany())
 
       await Promise.all(promises)
-      server.logger.info('MongoDB: Collections dropped successfully')
+      server.logger.info('MongoDB: Collections truncated successfully')
     },
 
     /**
@@ -159,7 +148,7 @@ export default (server) => {
       const fn = ndtk.req(seedPath)
 
       if (fn) {
-        await database.drop()
+        await database.truncate()
         server.logger.info('MongoDB: Adding seed data...')
 
         try {
@@ -177,7 +166,7 @@ export default (server) => {
      * Run
      */
     run: async (cmd) => {
-      const allowed = ['seed', 'drop']
+      const allowed = ['seed', 'truncate']
 
       if (allowed.includes(cmd)) {
         await database.connect()
