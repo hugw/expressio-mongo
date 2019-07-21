@@ -1,8 +1,12 @@
 import request from 'supertest'
 import path from 'path'
+import JoiBase from '@hapi/joi'
+import { ObjectId } from 'bson'
 
-import mongo from '@'
+import mongo, { objectId } from '@'
 import app from './fixtures/demo/app'
+
+const Joi = JoiBase.extend(objectId)
 
 describe('Expressio Mongo', () => {
   const on = jest.fn()
@@ -51,6 +55,24 @@ describe('Expressio Mongo', () => {
     const server = { root, events: { on }, ...config({ paths: { models: '/modeeels' } }) }
     const fn = () => mongo(server)
     expect(fn).toThrow(`MongoDB Error: "${path.join(root, '/modeeels')}" models path is not valid.`)
+  })
+
+  describe('objectId validation', () => {
+    it('given invalid objectIds, it should fail with proper message', () => {
+      const schema = Joi.objectId()
+
+      expect(schema.validate('dddd').error.message).toEqual('"value" must be a valid ObjectId')
+      expect(schema.validate(123).error.message).toEqual('"value" must be a string')
+      expect(schema.validate({}).error.message).toEqual('"value" must be a string')
+      expect(schema.validate([]).error.message).toEqual('"value" must be a string')
+    })
+
+    it('given a valid objectId, it should succeed pass validation', () => {
+      const schema = Joi.objectId()
+      const id = new ObjectId()
+
+      expect(schema.validate(String(id)).error).toBeFalsy()
+    })
   })
 })
 

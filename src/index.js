@@ -14,6 +14,26 @@ import merge from 'lodash/merge'
 import { Mongoose } from 'mongoose'
 import path from 'path'
 import fs from 'fs'
+import { ObjectId } from 'bson'
+
+/**
+ * Validate OjbectIds
+ * using Joi
+ */
+export const objectId = {
+  name: 'objectId',
+  base: Joi.string(),
+  language: {
+    invalid: 'must be a valid ObjectId',
+  },
+  pre(value, state, options) {
+    if (!ObjectId.isValid(value)) {
+      return this.createError('objectId.invalid', { value }, state, options)
+    }
+
+    return value
+  },
+}
 
 /**
  * Auto load models
