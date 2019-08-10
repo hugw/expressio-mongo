@@ -45,7 +45,7 @@ function loadModels(dir, conn) {
   ndtk.assert(ndtk.isDir(dir), `MongoDB Error: "${dir}" models path is not valid.`)
 
   fs.readdirSync(dir)
-    .filter(file => ((file.indexOf('.') !== 0) && (file !== 'index.js')))
+    .filter(file => ((file.indexOf('.') !== 0) && (file.indexOf('.map') === -1) && (file !== 'index.js')))
     .forEach((file) => {
       const model = ndtk.req(path.join(dir, file))
       model(conn)
