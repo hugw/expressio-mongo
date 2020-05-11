@@ -114,6 +114,8 @@ export default (server) => {
   // mounted apps
   const mongoose = new Mongoose()
 
+  mongoose.ObjectId.get(v => v && v.toString())
+
   mongoose.set('debug', config.debug)
   mongoose.plugin(schemaPlugin(config.schema.options))
 
